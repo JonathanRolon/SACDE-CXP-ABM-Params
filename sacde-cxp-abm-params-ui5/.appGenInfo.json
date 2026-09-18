@@ -1,0 +1,23 @@
+{
+  "generationParameters": {
+    "generationDate": "Fri Sep 18 2026 15:19:22 GMT+0000 (Coordinated Universal Time)",
+    "generatorPlatform": "SAP Business Application Studio",
+    "serviceType": "None",
+    "metadataFilename": "",
+    "serviceUrl": "N/A",
+    "appName": "sacde-cxp-abm-params-ui5",
+    "appTitle": "Parametrizacion Cuentas Por Pagar",
+    "appDescription": "Parametrizacion Cuentas Por Pagar",
+    "appNamespace": "",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.152.0",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.32.0",
+    "template": "Basic",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [],
+    "launchText": "To launch the generated application, run the following from the generated application root folder:\n\n```\n    npm start\n```"
+  }
+}
