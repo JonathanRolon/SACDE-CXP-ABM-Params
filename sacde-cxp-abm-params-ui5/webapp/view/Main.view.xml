@@ -1,6 +1,40 @@
-<mvc:View controllerName="sacdecxpabmparamsui5.controller.Main"
+<mvc:View
+    controllerName="sacdecxpabmparamsui5.controller.Main"
+    displayBlock="true"
+    height="100%"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
-    </Page>
+
+    <!-- La tabla de datos NO se declara acá: las columnas salen del $metadata
+         del servicio, así que la arma el controller y la cuelga de "detalle".
+         Ver Main.controller.js#_construirTabla. -->
+    <SplitApp id="splitApp">
+        <masterPages>
+            <Page id="paginaTablas" title="{i18n>masterTitulo}">
+                <List id="listaTablas"
+                    mode="SingleSelectMaster"
+                    items="{tablas>/tablas}"
+                    selectionChange=".onSeleccionarTabla">
+                    <StandardListItem
+                        title="{tablas>titulo}"
+                        description="{tablas>entidad}"
+                        icon="{tablas>icono}"
+                        type="Active"/>
+                </List>
+            </Page>
+        </masterPages>
+        <detailPages>
+            <Page id="paginaDetalle" title="{ui>/tituloTabla}">
+                <content>
+                    <MessageStrip
+                        text="{ui>/descripcionTabla}"
+                        type="Information"
+                        showIcon="true"
+                        class="sapUiSmallMargin"
+                        visible="{= !!${ui>/descripcionTabla} }"/>
+                    <VBox id="detalle"/>
+                </content>
+            </Page>
+        </detailPages>
+    </SplitApp>
 </mvc:View>

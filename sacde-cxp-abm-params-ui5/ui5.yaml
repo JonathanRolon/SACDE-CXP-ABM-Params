@@ -10,6 +10,12 @@ server:
       afterMiddleware: compression
       configuration:
         ignoreCertErrors: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        # Desarrollo local contra el CAP corriendo con `cds watch` en
+        # SACDE-Cuentas-x-Pagar-CAP. En CF este path lo resuelve el approuter
+        # (ver xs-app.json), no este proxy.
+        backend:
+          - path: /odata/v4/cxp-params
+            url: http://localhost:4004
         ui5:
           path:
             - /resources

@@ -14,6 +14,30 @@
       "id": "@sap/generator-fiori:basic",
       "version": "1.32.0",
       "toolsId": "51e46eb6-da87-4e68-921b-a87f478a8090"
+    },
+    "dataSources": {
+      "paramsService": {
+        "uri": "/odata/v4/cxp-params/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "sacdecxpabmparamsui5-display": {
+          "semanticObject": "sacdecxpabmparamsui5",
+          "action": "display",
+          "title": "{{flpTitle}}",
+          "subTitle": "{{flpSubtitle}}",
+          "icon": "sap-icon://table-view",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
@@ -38,7 +62,8 @@
       "minUI5Version": "1.152.0",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.ui.core": {},
+        "sap.ui.layout": {}
       }
     },
     "contentDensities": {
@@ -50,6 +75,21 @@
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
           "bundleName": "sacdecxpabmparamsui5.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "paramsService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true,
+          "updateGroupId": "abm",
+          "groupProperties": {
+            "abm": {
+              "submit": "API"
+            }
+          }
         }
       }
     },
