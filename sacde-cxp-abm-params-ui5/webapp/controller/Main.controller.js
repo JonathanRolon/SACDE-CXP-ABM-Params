@@ -87,11 +87,13 @@ sap.ui.define([
 
             try {
                 this._campos = await campos.leer(oModelo, oEntrada.entidad);
+                this._construirTabla(oEntrada, this._campos);
             } catch (oError) {
-                return this._mostrarError(oError,
-                    `No se pudo leer el modelo de ${oEntrada.entidad}. ¿Está expuesta en el servicio?`);
+                // Adentro del try también el armado de la tabla: si falla ahí,
+                // la excepción se perdía en un unhandled rejection y lo único
+                // que se veía era el detalle en blanco.
+                return this._mostrarError(oError, this._tituloDeError(oError, oEntrada.entidad));
             }
-            this._construirTabla(oEntrada, this._campos);
         },
 
         // ── Tabla ─────────────────────────────────────────────────────────
@@ -106,8 +108,10 @@ sap.ui.define([
                 aCampos.filter(c => c.nombre === "modifiedBy")
             );
 
+            const bSoloLectura = !!oEntrada.soloLectura;
+
             const oTabla = new Table({
-                mode: "SingleSelectLeft",
+                mode: bSoloLectura ? "None" : "SingleSelectLeft",
                 growing: true,
                 growingThreshold: 100,
                 growingScrollToLoad: true,
@@ -127,26 +131,53 @@ sap.ui.define([
                     parameters: { $count: true },
                     sorter: aCampos.filter(c => c.clave).map(c => new Sorter(c.nombre)),
                     template: new ColumnListItem({
-                        type: "Active",
+                        type: bSoloLectura ? "Inactive" : "Active",
                         cells: aVisibles.map(c => campos.celda(c))
                     })
                 }
             });
 
-            oTabla.attachItemPress(this.onEditar, this);
+            if (!bSoloLectura) oTabla.attachItemPress(this.onEditar, this);
             oTabla.setHeaderToolbar(this._construirToolbar(oEntrada));
 
             this._tabla = oTabla;
+
+            // El addItem va ANTES de pedir el binding, y el orden no es un
+            // detalle: una tabla que todavía no está en el árbol de controles
+            // no heredó el modelo, así que el binding de "items" ni siquiera
+            // existe todavía y getBinding devuelve undefined.
+            oContenedor.addItem(oTabla);
+
             this._binding = oTabla.getBinding("items");
             this._binding.attachDataReceived(this._actualizarContador, this);
-
-            oContenedor.addItem(oTabla);
         },
 
         _construirToolbar(oEntrada) {
             this._titulo = new Title({ text: oEntrada.titulo, level: "H2" });
 
             const aBotones = [];
+
+            // Tablas de consulta: el backend las expone @readonly, así que los
+            // botones de ABM no fallarían con un mensaje claro, fallarían con
+            // un 405. Mejor que no estén.
+            if (oEntrada.soloLectura) {
+                return new OverflowToolbar({
+                    content: [
+                        this._titulo,
+                        new ToolbarSpacer(),
+                        new SearchField({
+                            width: "18rem",
+                            placeholder: "Buscar…",
+                            search: this.onBuscar.bind(this)
+                        }),
+                        new Button({
+                            icon: "sap-icon://refresh", tooltip: "Refrescar",
+                            press: () => this._binding.refresh()
+                        })
+                    ]
+                });
+            }
+
             if (!oEntrada.filaUnica) {
                 aBotones.push(new Button({
                     text: "Crear", icon: "sap-icon://add", type: "Emphasized",
@@ -331,6 +362,24 @@ sap.ui.define([
         },
 
         // ── Errores ───────────────────────────────────────────────────────
+
+        /**
+         * El 403 por falta de rol es el error más probable y el que peor se lee
+         * si se lo mezcla con "¿está expuesta la entidad?": la entidad está, lo
+         * que falta es la role collection SACDE_CXP_ADMIN asignada al usuario.
+         */
+        _tituloDeError(oError, sEntidad) {
+            const sTexto = `${(oError && oError.status) || ""} ${(oError && oError.message) || ""} ${this._ultimoMensajeBackend()}`;
+            if (/\b403\b|lacking required roles|forbidden/i.test(sTexto)) {
+                return "No tenés permiso para mantener la parametrización. " +
+                    "Pedí que te asignen la role collection SACDE_CXP_ADMIN en BTP Cockpit " +
+                    "y volvé a entrar a la app (el token viejo no trae el rol).";
+            }
+            if (/\b401\b|unauthorized/i.test(sTexto)) {
+                return "La sesión venció. Recargá la página para volver a autenticarte.";
+            }
+            return `No se pudo abrir ${sEntidad}. El detalle de abajo es el error tal cual vino.`;
+        },
 
         /** El texto que mandó el CAP (los req.error de params-service.js). */
         _ultimoMensajeBackend() {

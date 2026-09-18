@@ -24,14 +24,14 @@ sap.ui.define([], () => {
         {
             entidad: "Parametrizacion",
             titulo: "Parametrización general",
-            descripcion: "Los escalares del contexto (ex ZFIT123). Fila única DEFAULT: se edita, no se borra.",
+            descripcion: "Los valores sueltos del contexto que viaja al core: condiciones de pago de NC y ND, tolerancia. Fila única: se edita, no se borra.",
             icono: "sap-icon://settings",
             filaUnica: true
         },
         {
             entidad: "ParamRangos",
             titulo: "Rangos de parametrización",
-            descripcion: "Los RANGE OF que viajan al core ABAP: sociedades válidas, grupos de cuentas, clases de documento de pago, etc.",
+            descripcion: "Las listas de valores que filtran lo que ve el portal: sociedades válidas, grupos de cuentas, clases de documento de pago.",
             icono: "sap-icon://filter",
             valoresFijos: {
                 Campo: [
@@ -47,7 +47,7 @@ sap.ui.define([], () => {
         {
             entidad: "BlartMapeo",
             titulo: "Clases de documento",
-            descripcion: "Tipo de comprobante → clase de documento (BLART). Única fuente de verdad: el ABAP ya no lee ZFIT123. CodArca 'DEF' es el default.",
+            descripcion: "Tipo de comprobante → clase de documento. Es la única fuente: el core ya no lo resuelve por su cuenta. Código ARCA 'DEF' = el valor por defecto.",
             icono: "sap-icon://document-text",
             valoresFijos: {
                 Via: ["FI", "MIRO"],
@@ -57,7 +57,7 @@ sap.ui.define([], () => {
         {
             entidad: "CatalogoImpuestos",
             titulo: "Catálogo de impuestos",
-            descripcion: "ex ZFIT125. La jurisdicción es parte de la key: sin ella las 24 filas de IIBB colapsan en una sola y el combo pierde las provincias.",
+            descripcion: "Impuestos y jurisdicciones que ofrece el portal al cargar un comprobante. La jurisdicción es parte de la clave: cada provincia de IIBB es una fila.",
             icono: "sap-icon://official-service",
             valoresFijos: {
                 TipoPos: ["COM", "SERV", "MAT", "RIGI"]
@@ -66,7 +66,7 @@ sap.ui.define([], () => {
         {
             entidad: "PadronPercepciones",
             titulo: "Padrón de percepciones",
-            descripcion: "ex ZFIT126. Alícuotas por CUIT, impuesto y jurisdicción, con vigencia. Hoy se mantiene a mano: no hay carga automática del padrón.",
+            descripcion: "Alícuotas de percepción por CUIT, impuesto y jurisdicción, con vigencia. Se mantiene a mano: no hay carga automática del padrón.",
             icono: "sap-icon://collections-management",
             valoresFijos: {
                 Spercep: SI_NO
@@ -75,30 +75,28 @@ sap.ui.define([], () => {
         {
             entidad: "Fce",
             titulo: "Facturas de Crédito Electrónica",
-            descripcion: "ex ZEVC_FECRED. Comprobantes MiPyME con su cuenta corriente.",
+            descripcion: "Comprobantes MiPyME con su cuenta corriente.",
             icono: "sap-icon://credit-card"
         },
         {
             entidad: "TipoComprobante",
             titulo: "Tipos de comprobante",
-            descripcion: "ex ZFIT_TIPO_COMP. Tipo interno ↔ tipo AFIP/ARCA y carácter impositivo.",
+            descripcion: "Equivalencia entre el tipo de comprobante interno y el de ARCA, con su carácter impositivo.",
             icono: "sap-icon://list"
         },
         {
             entidad: "UsuariosPortal",
             titulo: "Usuarios del portal",
-            descripcion: "ex ZFIT122. Qué mail corresponde a qué proveedor (LIFNR). Sin fila acá, un proveedor no ve nada.",
+            descripcion: "Solo consulta. El mapeo mail ↔ proveedor lo resuelven el IAS y el core ABAP; esta tabla quedó sin uso y normalmente está vacía.",
             icono: "sap-icon://employee",
-            valoresFijos: {}
+            soloLectura: true
         },
         {
             entidad: "UsuariosPortalEstado",
             titulo: "Estado de los usuarios",
-            descripcion: "ex ZFIT124. Último ingreso y cuenta validada. La escribe el propio login; se toca sólo para corregir.",
+            descripcion: "Solo consulta. Último ingreso al portal de cada usuario: lo graba el propio login, y editarlo a mano sería falsear la auditoría.",
             icono: "sap-icon://history",
-            valoresFijos: {
-                Validada: ["X"]
-            }
+            soloLectura: true
         },
         {
             entidad: "Impersonar",

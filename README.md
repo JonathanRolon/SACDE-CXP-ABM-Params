@@ -23,9 +23,19 @@ parametrización detrás del rol.
 
 ## Tablas
 
-`Parametrizacion` (fila única DEFAULT) · `ParamRangos` · `BlartMapeo` ·
-`CatalogoImpuestos` · `PadronPercepciones` · `Fce` · `TipoComprobante` ·
-`UsuariosPortal` · `UsuariosPortalEstado` · `Impersonar`
+Con ABM completo: `Parametrizacion` (fila única DEFAULT) · `ParamRangos` ·
+`BlartMapeo` · `CatalogoImpuestos` · `PadronPercepciones` · `Fce` ·
+`TipoComprobante` · `Impersonar`
+
+Solo consulta (`@readonly` en el servicio, sin botones en la app):
+
+- `UsuariosPortal` — el mapeo mail ↔ proveedor lo resuelven el IAS y el core
+  ABAP (`ZUS0_PORTAL_PROV` / `ZUS1_PORTAL_PROV`). Esta tabla quedó sin
+  consumidores el 26/08/2026 y nunca llegó a tener datos; está anotada como
+  pendiente de borrar del schema.
+- `UsuariosPortalEstado` — la escribe `registrarIngreso` en cada login y la lee
+  `ListarUsuariosSet` para pisar `fechaLogueo`/`cuentaValidada`, que S/4 no
+  conoce. Viva, pero es auditoría: editarla a mano sería falsearla.
 
 ## Cómo funciona la app
 
