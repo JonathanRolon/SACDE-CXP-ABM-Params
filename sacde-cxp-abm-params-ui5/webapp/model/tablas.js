@@ -51,7 +51,7 @@ sap.ui.define([], () => {
             icono: "sap-icon://document-text",
             valoresFijos: {
                 Via: ["FI", "MIRO"],
-                TipoComp: ["FT", "TF", "NC", "ND"]
+                TipoComp: ["FT", "TF", "NC", "ND", "FA", "NA"]
             }
         },
         {
