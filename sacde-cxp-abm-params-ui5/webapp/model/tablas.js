@@ -51,7 +51,14 @@ sap.ui.define([], () => {
             icono: "sap-icon://document-text",
             valoresFijos: {
                 Via: ["FI", "MIRO"],
-                TipoComp: ["FT", "TF", "NC", "ND", "FA", "NA"]
+                TipoComp: [
+                    { key: "FT", text: "FT - Factura" },
+                    { key: "TF", text: "TF - Tique Factura" },
+                    { key: "NC", text: "NC - Nota de Crédito" },
+                    { key: "ND", text: "ND - Nota de Débito" },
+                    { key: "FA", text: "FA - Factura de Anticipo" },
+                    { key: "NA", text: "NA - Nota de Crédito de Anticipo" }
+                ]
             }
         },
         {

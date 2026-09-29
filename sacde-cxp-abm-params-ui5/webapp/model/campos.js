@@ -105,7 +105,10 @@ sap.ui.define([
                 enabled: bEditable,
                 forceSelection: false,
                 width: "100%",
-                items: aFijos.map(v => new Item({ key: v, text: v }))
+                // Cada valor es un string, o { key, text } si conviene mostrar descripción.
+                items: aFijos.map(v => typeof v === "object"
+                    ? new Item({ key: v.key, text: v.text })
+                    : new Item({ key: v, text: v }))
             });
         }
 
